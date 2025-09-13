@@ -119,19 +119,34 @@ def render_input_section() -> None:
     """할 일 입력 섹션 렌더링"""
     st.subheader("➕ 새 할 일 추가")
     
+    # 입력창 초기화 상태 관리
+    if 'clear_input' not in st.session_state:
+        st.session_state.clear_input = False
+    
     col1, col2 = st.columns([4, 1])
     
     with col1:
+        # 입력창 초기화가 필요한 경우 빈 값으로 설정
+        input_value = "" if st.session_state.clear_input else st.session_state.get("new_todo_input", "")
+        
         new_todo = st.text_input(
             "할 일을 입력하세요",
+            value=input_value,
             placeholder="예: 프로젝트 계획서 작성",
             key="new_todo_input"
         )
+        
+        # 초기화 플래그 리셋
+        if st.session_state.clear_input:
+            st.session_state.clear_input = False
     
     with col2:
         if st.button("추가", type="primary", use_container_width=True):
-            add_todo(new_todo)
-            st.rerun()
+            if new_todo.strip():  # 빈 값이 아닐 때만 추가
+                add_todo(new_todo)
+                # 입력창 초기화 플래그 설정
+                st.session_state.clear_input = True
+                st.rerun()
     
     st.markdown("---")
 
