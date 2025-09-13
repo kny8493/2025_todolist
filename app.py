@@ -171,11 +171,12 @@ def render_todo_item(todo: Dict[str, Any]) -> None:
     with col1:
         # 완료 체크박스
         completed = st.checkbox(
-            "",
+            "완료",
             value=todo['completed'],
             key=f"checkbox_{todo['id']}",
             on_change=toggle_todo,
-            args=(todo['id'],)
+            args=(todo['id'],),
+            label_visibility="collapsed"
         )
     
     with col2:
